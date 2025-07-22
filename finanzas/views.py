@@ -10,18 +10,29 @@ from .models import Movimiento, Categoria
 @login_required
 def home(request):
     categorias = Categoria.objects.all()
+    movimientos = Movimiento.objects.filter(usuario=request.user).order_by('-fecha')
+    ingresos = 0
+    gastos = 0
+    for movimiento in movimientos:
+        if movimiento.tipo == 'ingreso':
+            ingresos += movimiento.monto
+        if movimiento.tipo == 'gasto':
+            gastos += movimiento.monto
+    
+    diferencia = ingresos - gastos
     if request.method == 'GET':
-        movimientos = Movimiento.objects.filter(usuario=request.user).order_by('-fecha')   
         return render(request, 'home.html', {
             'movimientos': movimientos,
             'filtro_tipo': 'todos',
             'filtro_categoria': 'todas',
-            'categorias': categorias
+            'categorias': categorias,
+            'ingresos': ingresos,
+            'gastos': gastos,
+            'diferencia': diferencia
         })
     else:
         filtro_tipo = request.POST.get('filtro', 'todos')
         filtro_categoria = request.POST.get('filtro_categoria', 'todas')
-        movimientos = Movimiento.objects.filter(usuario=request.user).order_by('-fecha')
 
         if filtro_tipo != 'todos':
             movimientos = movimientos.filter(usuario=request.user, tipo=filtro_tipo)
@@ -33,7 +44,9 @@ def home(request):
             'movimientos': movimientos,
             'filtro_tipo': filtro_tipo,
             'filtro_categoria': filtro_categoria,
-            'categorias': categorias
+            'categorias': categorias,
+            'ingresos': ingresos,
+            'gastos': gastos
         })
 
 def signin(request):

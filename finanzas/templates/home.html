@@ -4,6 +4,10 @@
 <main class="container mb-4">
     <h1>Movimientos</h1>
 
+    <h3>Ingresos: <span class="text-success">${{ingresos}}</span></h3>
+    <h3>Gastos: <span class="text-danger">${{gastos}}</span></h3>
+    <h3>Diferencia: <span class="fw-bold">${{diferencia}}</span></h3>
+
     <form action="" method="POST">
         {% csrf_token %}
         <div>
@@ -33,19 +37,20 @@
         <div class="col-md-4 col-sm-6 mb-4">
             <div class="card h-100">
                 <div class="card-body">
-                    <h5 class="card-title {% if filtro_tipo == 'gasto' %} text-danger {% else %} text-success {% endif %}">{{ movimiento.nombre }}</h5>
+                    <h5 class="card-title {% if filtro_tipo == 'gasto' %} text-danger {% elif filtro_tipo == 'ingreso' %} text-success {% else %} fw-bold {% endif %}">-- {{ movimiento.nombre }} --</h5>
                     <p><strong>Fecha:</strong> {{ movimiento.fecha }}</p>
-                    <p><strong>Tipo:</strong> {{ movimiento.tipo|capfirst }}</p>
+                    <p><strong>Tipo:</strong> <span class="fw-bold {% if movimiento.tipo == 'ingreso' %} text-success {% else %} text-danger {% endif %}">{{ movimiento.tipo|capfirst }}</span></p>
                     {% if movimiento.categoria %}
                     <p><strong>Categoría:</strong> {{ movimiento.categoria }}</p>
                     {% endif %}
                     <p><strong>Monto:</strong> ${{ movimiento.monto }}</p>
                     <a href="{% url 'borrar_movimiento' movimiento.id %}" class="btn btn-danger mt-2">Eliminar</a>
-                    <a href="{% url 'editar_movimiento' movimiento.id %}" class="btn btn-success mt-2">Editar</a>
+                    <a href="{% url 'editar_movimiento' movimiento.id %}" class="btn btn-secondary mt-2">Editar</a>
                 </div>
             </div>
         </div>
         {% endfor %}
+
     </div>
 </main>
 {% endblock content %}
