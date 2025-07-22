@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block content %}
+<main class="container mb-4">
+    <h1>Movimientos</h1>
+
+    <form action="" method="POST">
+        {% csrf_token %}
+        <div>
+            <label for="filtro">Filtrar por Tipo:</label>
+            <select name="filtro" id="filtro" onchange="this.form.submit()" class="form-control mb-3">
+                <option value="todos" {% if filtro_tipo == 'todos' %}selected{% endif %}>Todos</option>
+                <option value="gasto" {% if filtro_tipo == 'gasto' %}selected{% endif %}>Gasto</option>
+                <option value="ingreso" {% if filtro_tipo == 'ingreso' %}selected{% endif %}>Ingreso</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="filtro_categoria">Filtrar por categoría:</label>
+            <select name="filtro_categoria" id="filtro_categoria" class="form-select" onchange="this.form.submit()">
+                <option value="todas" {% if filtro_categoria == 'todas' %}selected{% endif %}>Todas</option>
+                {% for cat in categorias %}
+                <option value="{{ cat.id }}" {% if filtro_categoria == cat.id|stringformat:"s" %}selected{% endif %}>
+                    {{ cat.nombre }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+    </form>
+
+    <div class="row">
+        {% for movimiento in movimientos %}
+        <div class="col-md-4 col-sm-6 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title {% if filtro_tipo == 'gasto' %} text-danger {% else %} text-success {% endif %}">{{ movimiento.nombre }}</h5>
+                    <p><strong>Fecha:</strong> {{ movimiento.fecha }}</p>
+                    <p><strong>Tipo:</strong> {{ movimiento.tipo|capfirst }}</p>
+                    {% if movimiento.categoria %}
+                    <p><strong>Categoría:</strong> {{ movimiento.categoria }}</p>
+                    {% endif %}
+                    <p><strong>Monto:</strong> ${{ movimiento.monto }}</p>
+                    <a href="{% url 'borrar_movimiento' movimiento.id %}" class="btn btn-danger mt-2">Eliminar</a>
+                    <a href="{% url 'editar_movimiento' movimiento.id %}" class="btn btn-success mt-2">Editar</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</main>
+{% endblock content %}
