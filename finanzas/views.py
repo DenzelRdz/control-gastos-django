@@ -20,6 +20,7 @@ def home(request):
             gastos += movimiento.monto
     
     diferencia = ingresos - gastos
+    
     if request.method == 'GET':
         return render(request, 'home.html', {
             'movimientos': movimientos,
