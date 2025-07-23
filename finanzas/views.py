@@ -34,10 +34,8 @@ def home(request):
     else:
         filtro_tipo = request.POST.get('filtro', 'todos')
         filtro_categoria = request.POST.get('filtro_categoria', 'todas')
-
         if filtro_tipo != 'todos':
             movimientos = movimientos.filter(usuario=request.user, tipo=filtro_tipo)
-
         if filtro_categoria != 'todas':
             movimientos = movimientos.filter(usuario=request.user, categoria__id=filtro_categoria)
 
@@ -51,7 +49,6 @@ def home(request):
         })
 
 def signin(request):
-    
     if request.method == 'GET':
         return render(request, 'signin.html', {
             'form': AuthenticationForm
@@ -60,7 +57,7 @@ def signin(request):
         user = authenticate(request, username=request.POST['username'], password=request.POST['password'])
         if user is None:
             return render(request, 'signin.html', {
-                'error': 'Credenciales incorrectas',
+                'error': 'Credenciales Incorrectas',
                 'form': AuthenticationForm
             })
         else:
