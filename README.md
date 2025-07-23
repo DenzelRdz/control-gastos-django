@@ -51,20 +51,17 @@ Accede en tu navegador a http://127.0.0.1:8000/
 ## 📂 Estructura del Proyecto
 
 ```
-control_de_gastos/
-├── config/               # Configuración principal
-│   ├── settings.py
-│   ├── urls.py
-│   └── wsgi.py
-├── gastos/               # Aplicación principal
+control_de_gastos/               
+├── settings.py           # Configuración principal
+├── urls.py
+└── wsgi.py
+├── finanzas/               # Aplicación principal
 │   ├── migrations/
 │   ├── templates/
 │   ├── models.py
 │   ├── views.py
 │   ├── urls.py
 │   └── forms.py
-├── static/               # Archivos estáticos
-├── templates/            # Plantillas base
 ├── db.sqlite3
 ├── manage.py
 └── requirements.txt
