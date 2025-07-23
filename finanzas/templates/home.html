@@ -39,7 +39,7 @@
                 <div class="card-body">
                     <h5 class="card-title fw-bold">-- {{ movimiento.nombre }} --</h5>
                     <p><strong>Fecha:</strong> {{ movimiento.fecha }}</p>
-                    <p><strong>Tipo:</strong> <span class="fw-bold {% if movimiento.tipo == 'ingreso' %} text-success {% else %} text-danger {% endif %}">{{ movimiento.tipo|capfirst }}</span></p>
+                    <p><strong>Tipo:</strong> <span class="fw-bold {% if movimiento.tipo == 'ingreso' %} text-success {% else %} text-danger {% endif %}">{{ movimiento.tipo|upper }}</span></p>
                     {% if movimiento.categoria %}
                     <p><strong>Categoría:</strong> {{ movimiento.categoria }}</p>
                     {% endif %}
