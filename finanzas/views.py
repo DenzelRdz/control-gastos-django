@@ -29,7 +29,8 @@ def home(request):
             'categorias': categorias,
             'ingresos': ingresos,
             'gastos': gastos,
-            'diferencia': diferencia
+            'diferencia': diferencia,
+            'usuario': request.user
         })
     else:
         filtro_tipo = request.POST.get('filtro', 'todos')
@@ -45,7 +46,8 @@ def home(request):
             'filtro_categoria': filtro_categoria,
             'categorias': categorias,
             'ingresos': ingresos,
-            'gastos': gastos
+            'gastos': gastos,
+            'usuario': request.user
         })
 
 def signin(request):

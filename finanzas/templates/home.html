@@ -2,7 +2,7 @@
 
 {% block content %}
 <main class="container mb-4">
-    <h1>Movimientos</h1>
+    <h1>Movimientos de <span class="fw-bold text-secondary text-decoration-underline">{{usuario|capfirst}}</span></h1>
     
     <h3>Ingresos: <span class="text-success">${{ingresos}}</span></h3>
     <h3>Gastos: <span class="text-danger">${{gastos}}</span></h3>
