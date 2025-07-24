@@ -2,6 +2,10 @@
 
 Una aplicación web sencilla para registrar, categorizar y visualizar tus gastos personales, construida con Django.
 
+## 🌍 Demo en Línea
+
+Puedes ver la app desplegada en [controlgastos.azurewebsites.net](https://control-de-gastos.azurewebsites.net/)
+
 ## 🏗️ Tecnologías
 
 - **Backend**: Python 3.x, Django
