@@ -1,0 +1,15 @@
+version: 1.0
+
+# Indica que el directorio donde está tu app Django es la raíz
+build:
+  appLocation: .            # el punto significa la raíz del repo
+  outputLocation: staticfiles
+
+hooks:
+  prebuild:
+    - echo "Instalando dependencias..."
+    - pip install -r requirements.txt
+  build:
+    - echo "Ejecutando collectstatic y migraciones..."
+    - python manage.py collectstatic --noinput
+    - python manage.py migrate
