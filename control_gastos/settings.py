@@ -25,7 +25,7 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', '-+$zso177yyp++%r%ia46x7c5ujua(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = ['https://control-de-gastos.azurewebsites.net/']
+ALLOWED_HOSTS = ['https://control-de-gastos.azurewebsites.net']
 
 
 # Application definition
