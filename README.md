@@ -281,9 +281,231 @@ def editar_movimiento(request, id):
 - Al guardar se redirige al usuario a la vista principal
 ---
 
+## Templates
 
+### Base
+```HTML
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Control de Gastos</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" />
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+      <div class="container">
+        <a class="navbar-brand" href="/">Control de Gastos App</a>
+        
+        <div class="text-center text-xs-start" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            {% if user.is_authenticated %}
+              <li class="navlink-item">
+                <a class="nav-link" href="{% url 'home' %}">Inicio</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'agregar' %}">Agregar Movimiento</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'logout' %}">Cerrar Sesión</a>
+              </li>
+            {% else %}
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'login' %}">Inicio de Sesión</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'signup' %}">Registrarse</a>
+              </li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </nav>
 
+    <nav>
+      <ul></ul>
+    </nav>
+    {% block content %}
 
+    {% endblock %}
+  </body>
+</html>
+```
+- Navbar para moverse entre vistas de la aplicación
 
+### Home
+```HTML
+{% extends "base.html" %}
+{% block content %}
+<main class="container mb-4">
+    <h1>Movimientos de <span class="fw-bold text-secondary text-decoration-underline">{{usuario|capfirst}}</span></h1>
+    <h3>Ingresos: <span class="text-success">${{ingresos}}</span></h3>
+    <h3>Gastos: <span class="text-danger">${{gastos}}</span></h3>
+    <h3>Diferencia: <span class="fw-bold">${{diferencia}}</span></h3>
+
+    <form action="" method="POST">
+        {% csrf_token %}
+        <div>
+            <label for="filtro">Filtrar por Tipo:</label>
+            <select name="filtro" id="filtro" onchange="this.form.submit()" class="form-control mb-3">
+                <option value="todos" {% if filtro_tipo == 'todos' %}selected{% endif %}>Todos</option>
+                <option value="gasto" {% if filtro_tipo == 'gasto' %}selected{% endif %}>Gasto</option>
+                <option value="ingreso" {% if filtro_tipo == 'ingreso' %}selected{% endif %}>Ingreso</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="filtro_categoria">Filtrar por categoría:</label>
+            <select name="filtro_categoria" id="filtro_categoria" class="form-select" onchange="this.form.submit()">
+                <option value="todas" {% if filtro_categoria == 'todas' %}selected{% endif %}>Todas</option>
+                {% for cat in categorias %}
+                <option value="{{ cat.id }}" {% if filtro_categoria == cat.id|stringformat:"s" %}selected{% endif %}>
+                    {{ cat.nombre }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+    </form>
+    <div class="row">
+        {% for movimiento in movimientos %}
+        <div class="col-md-4 col-sm-6 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold">-- {{ movimiento.nombre }} --</h5>
+                    <p><strong>Fecha:</strong> {{ movimiento.fecha }}</p>
+                    <p><strong>Tipo:</strong> <span class="fw-bold {% if movimiento.tipo == 'ingreso' %} text-success {% else %} text-danger {% endif %}">{{ movimiento.tipo|upper }}</span></p>
+                    {% if movimiento.categoria %}
+                    <p><strong>Categoría:</strong> {{ movimiento.categoria }}</p>
+                    {% endif %}
+                    <p><strong>Monto:</strong> ${{ movimiento.monto }}</p>
+                    <a href="{% url 'borrar_movimiento' movimiento.id %}" class="btn btn-danger mt-2">Eliminar</a>
+                    <a href="{% url 'editar_movimiento' movimiento.id %}" class="btn btn-secondary mt-2">Editar</a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <h4>No hay movimientos aún, pruebe agregando alguno.</h4>
+        {% endfor %}
+    </div>
+</main>
+{% endblock content %}
+```
+- Se muestran los diferentes movimientos con sus características
+- Se muestran los filtros para elegir que movimientos prefieres observar
+- Se muestran los ingresos totales, los gastos totales y la diferencia
+- Desde aquí se eliminan o editan los movimientos
+
+### Inicio de Sesión
+```HTML
+{% extends "base.html" %}
+{% block content %}
+<main class="container">
+    <div class="row">
+        <div class="col-md-4 offset-md-4">
+            <h1 class="text-center">Iniciar Sesión</h1>
+            <form action="" method="POST">
+                {{error}}
+                <br>
+                {% csrf_token %}
+                <label for="username">Usuario:</label>
+                <div>
+                    <input class="w-100 form-control" type="text" name="username" id="username">
+                </div>
+                <label for="password">Contraseña:</label>
+                <div class="mb-2">
+                    <input class="w-100 form-control" type="password" name="password" id="password">
+                </div>
+                <button class="btn btn-dark">Iniciar sesión</button>
+            </form>
+            <br>
+            <a class="text-decoration-none btn btn-secondary" href="/signup/">Click aquí para registrarse</a>
+        </div>
+    </div>
+</main>
+{% endblock content %}
+```
+- Formulario de inicio de sesión
+- Se ingresa usuario y contraseña para ingresar
+
+### Registrarse
+```HTML
+{% extends "base.html" %}
+{% block content %}
+<main class="container">
+    <div class="row">
+        <div class="col-md-4 offset-md-4">
+            <h1 class="text-center">Registrarse</h1>
+            <form action="" method="POST">
+                {{error}}
+                <br>
+                {% csrf_token %}
+                <label for="username">Usuario:</label>
+                <div>
+                    <input class="w-100 form-control" type="text" name="username" id="username">
+                </div>
+                <label for="password1">Contraseña:</label>
+                <div>
+                    <input class="w-100 form-control" type="password" name="password1" id="password1">
+                </div>
+                <label for="password2">Confirma tu Contraseña:</label>
+                <div class="mb-2">
+                    <input class="w-100 form-control" type="password" name="password2" id="password2">
+                </div>
+                <button class="btn btn-dark">Registrarse</button>
+            </form>
+        </div>
+    </div>
+</main>
+{% endblock content %}
+```
+- Formulario para registrarse en la aplicación
+- Se ingresan nombre de usuario y contraseña dos veces para confirmar
+
+### Crear Movimiento
+```HTML
+{% extends "base.html" %}
+{% block content %}
+<main class="container">
+    <div class="row">
+        <div class="col-md-4 offset-md-4 mb-4">
+            <h1>Crear Movimiento</h1>
+            <form action="" method="POST">
+                {{error}}
+                {% csrf_token %}
+                {{form.as_p}}
+                <button class="btn btn-dark">Agregar</button>
+            </form>
+        </div>
+    </div>
+</main>
+{% endblock content %}
+```
+- Formulario para crear un movimiento nuevo
+- Se debe ingresar nombre, categoria, tipo y fecha en que se realizó el movimiento
+
+### Editar Movimiento
+```HTML
+{% extends "base.html" %}
+{% block content %}
+<main class="container">
+    <div class="row">
+        <div class="col-md-4 offset-md-4 mb-4">
+            <h1>Editar Movimiento</h1>
+            <form action="" method="POST">
+                {{error}}
+                {% csrf_token %}
+                {{form.as_p}}
+                <button class="btn btn-dark">Guardar</button>
+            </form>
+        </div>
+    </div>
+</main>
+{% endblock content %}
+```
+- Formulario para editar movimientos
+- Se rellena automáticamente con los datos del movimiento seleccionado
+- Se puede editar cualquier dato y se le da en el botón guardar para conservar los cambios
+
+---
 
 
