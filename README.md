@@ -4,7 +4,7 @@ Una aplicación web sencilla para registrar, categorizar y visualizar tus gastos
 
 ## 🌍 Demo en Línea
 
-Puedes ver la app desplegada en [controlgastos.azurewebsites.net](https://control-de-gastos.azurewebsites.net/)
+Puedes ver la app desplegada en [control-de-gastos.azurewebsites.net](https://control-de-gastos.azurewebsites.net/)
 
 ## 🏗️ Tecnologías
 
