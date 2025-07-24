@@ -1,2 +1,0 @@
-[config]
-command = python3 -m gunicorn control_gastos.wsgi --bind=0.0.0.0 --timeout 600
